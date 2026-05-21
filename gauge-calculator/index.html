@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4DZVK212J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-T4DZVK212J');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="AePOnuSo4vvO81fknjDi69dxaGotLgwNUbQGqx0IymU" />
+  <title>編み物ゲージ計算ツール｜目数・段数・サイズを自動計算</title>
+  <meta name="description" content="編み物のゲージ計算をスマホで簡単に。目数からサイズ、サイズから目数、パターンのゲージ変換まで無料で計算できます。">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      background: #faf9f7;
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #7b5ea7;
+      color: white;
+      padding: 16px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    header p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    /* 広告枠 */
+    .ad-slot {
+      background: #f0ede8;
+      border: 1px dashed #ccc;
+      text-align: center;
+      padding: 12px;
+      margin: 12px 16px;
+      color: #999;
+      font-size: 0.8rem;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ad-slot-rectangle {
+      min-height: 250px;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 16px 32px;
+    }
+
+    /* タブ */
+    .tabs {
+      display: flex;
+      margin: 16px 0 0;
+      border-bottom: 2px solid #7b5ea7;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px 4px;
+      text-align: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-bottom: none;
+      color: #666;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: #7b5ea7;
+      color: white;
+      font-weight: bold;
+      border-color: #7b5ea7;
+    }
+
+    /* 計算パネル */
+    .panel {
+      display: none;
+      background: white;
+      border: 1px solid #ddd;
+      border-top: none;
+      padding: 20px 16px;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #7b5ea7;
+      margin-bottom: 4px;
+    }
+
+    .panel-desc {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #555;
+    }
+
+    .label-note {
+      font-weight: normal;
+      color: #999;
+      font-size: 0.78rem;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      background: #fafafa;
+      -webkit-appearance: none;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #7b5ea7;
+      background: #fff;
+    }
+
+    .unit {
+      white-space: nowrap;
+      color: #666;
+      font-size: 0.9rem;
+      min-width: 40px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 16px 0;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #7b5ea7;
+      margin-bottom: 12px;
+      padding-left: 8px;
+      border-left: 3px solid #7b5ea7;
+    }
+
+    .calc-btn {
+      width: 100%;
+      padding: 14px;
+      background: #7b5ea7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .calc-btn:active {
+      background: #5e4580;
+    }
+
+    .result-box {
+      display: none;
+      background: #f3effb;
+      border: 2px solid #7b5ea7;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .result-box.show {
+      display: block;
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      color: #7b5ea7;
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #5e4580;
+    }
+
+    .result-unit {
+      font-size: 1rem;
+      color: #7b5ea7;
+      margin-left: 4px;
+    }
+
+    .result-note {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 8px;
+    }
+
+    .result-multi {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .result-item {
+      text-align: center;
+      padding: 12px 16px;
+      background: white;
+      border-radius: 6px;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .result-item .label {
+      font-size: 0.78rem;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .result-item .value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #5e4580;
+    }
+
+    .result-item .sub {
+      font-size: 0.78rem;
+      color: #7b5ea7;
+    }
+
+    /* 使い方 */
+    .howto {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .howto h2 {
+      font-size: 0.95rem;
+      color: #7b5ea7;
+      margin-bottom: 12px;
+    }
+
+    .howto p, .howto li {
+      font-size: 0.82rem;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .howto ul {
+      padding-left: 1.2em;
+    }
+
+    footer {
+      background: #555;
+      color: #ccc;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.78rem;
+      margin-top: 32px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🧶 編み物ゲージ計算ツール</h1>
+  <p>目数・段数・サイズ・ゲージ変換を無料で計算</p>
+</header>
+
+<!-- 広告枠（上部） -->
+<div style="max-width:640px; margin:0 auto;">
+  <div class="ad-slot">
+    <!-- Google AdSense コードをここに挿入 -->
+    広告
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- タブ -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(0)">サイズ→目数</div>
+    <div class="tab" onclick="switchTab(1)">目数→サイズ</div>
+    <div class="tab" onclick="switchTab(2)">ゲージ変換</div>
+  </div>
+
+  <!-- パネル1：サイズ→目数 -->
+  <div class="panel active" id="panel0">
+    <div class="panel-title">サイズ → 目数・段数の計算</div>
+    <div class="panel-desc">作りたいサイズと自分のゲージから、必要な目数・段数を計算します</div>
+
+    <div class="section-label">自分のゲージ（10cm × 10cmの目数と段数）</div>
+
+    <div class="form-group">
+      <label>目数 <span class="label-note">（横10cmの目数）</span></label>
+      <div class="input-row">
+        <input type="number" id="p1_gauge_st" placeholder="例：20" min="1">
+        <span class="unit">目 / 10cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>段数 <span class="label-note">（縦10cmの段数）</span></label>
+      <div class="input-row">
+        <input type="number" id="p1_gauge_row" placeholder="例：28" min="1">
+        <span class="unit">段 / 10cm</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="section-label">作りたいサイズ</div>
+
+    <div class="form-group">
+      <label>幅</label>
+      <div class="input-row">
+        <input type="number" id="p1_width" placeholder="例：40" min="0.1" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>高さ（段数を出す場合）</label>
+      <div class="input-row">
+        <input type="number" id="p1_height" placeholder="例：60" min="0.1" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calcSizeToStitch()">計算する</button>
+
+    <div class="result-box" id="p1_result">
+      <div class="result-label">必要な目数・段数</div>
+      <div class="result-multi">
+        <div class="result-item">
+          <div class="label">目数（幅）</div>
+          <div class="value" id="p1_st">-</div>
+          <div class="sub">目</div>
+        </div>
+        <div class="result-item">
+          <div class="label">段数（高さ）</div>
+          <div class="value" id="p1_row">-</div>
+          <div class="sub">段</div>
+        </div>
+      </div>
+      <div class="result-note">※小数点以下は四捨五入。作品に合わせて調整してください。</div>
+    </div>
+  </div>
+
+  <!-- パネル2：目数→サイズ -->
+  <div class="panel" id="panel1">
+    <div class="panel-title">目数・段数 → サイズの計算</div>
+    <div class="panel-desc">目数・段数と自分のゲージから、出来上がりサイズを計算します</div>
+
+    <div class="section-label">自分のゲージ（10cm × 10cmの目数と段数）</div>
+
+    <div class="form-group">
+      <label>目数 <span class="label-note">（横10cmの目数）</span></label>
+      <div class="input-row">
+        <input type="number" id="p2_gauge_st" placeholder="例：20" min="1">
+        <span class="unit">目 / 10cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>段数 <span class="label-note">（縦10cmの段数）</span></label>
+      <div class="input-row">
+        <input type="number" id="p2_gauge_row" placeholder="例：28" min="1">
+        <span class="unit">段 / 10cm</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="section-label">編んだ目数・段数</div>
+
+    <div class="form-group">
+      <label>目数</label>
+      <div class="input-row">
+        <input type="number" id="p2_st" placeholder="例：80" min="1">
+        <span class="unit">目</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>段数</label>
+      <div class="input-row">
+        <input type="number" id="p2_row" placeholder="例：168" min="1">
+        <span class="unit">段</span>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calcStitchToSize()">計算する</button>
+
+    <div class="result-box" id="p2_result">
+      <div class="result-label">出来上がりサイズ</div>
+      <div class="result-multi">
+        <div class="result-item">
+          <div class="label">幅</div>
+          <div class="value" id="p2_width">-</div>
+          <div class="sub">cm</div>
+        </div>
+        <div class="result-item">
+          <div class="label">高さ</div>
+          <div class="value" id="p2_height">-</div>
+          <div class="sub">cm</div>
+        </div>
+      </div>
+      <div class="result-note">※実際の仕上がりはブロッキング等で変わる場合があります。</div>
+    </div>
+  </div>
+
+  <!-- パネル3：ゲージ変換 -->
+  <div class="panel" id="panel2">
+    <div class="panel-title">ゲージ変換（パターンと自分のゲージが違う場合）</div>
+    <div class="panel-desc">パターンのゲージと自分のゲージが異なるとき、目数・段数を換算します</div>
+
+    <div class="section-label">パターンのゲージ</div>
+
+    <div class="form-group">
+      <label>目数 <span class="label-note">（横10cmの目数）</span></label>
+      <div class="input-row">
+        <input type="number" id="p3_pat_st" placeholder="例：20" min="1">
+        <span class="unit">目 / 10cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>段数 <span class="label-note">（縦10cmの段数）</span></label>
+      <div class="input-row">
+        <input type="number" id="p3_pat_row" placeholder="例：28" min="1">
+        <span class="unit">段 / 10cm</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="section-label">自分のゲージ</div>
+
+    <div class="form-group">
+      <label>目数 <span class="label-note">（横10cmの目数）</span></label>
+      <div class="input-row">
+        <input type="number" id="p3_my_st" placeholder="例：22" min="1">
+        <span class="unit">目 / 10cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>段数 <span class="label-note">（縦10cmの段数）</span></label>
+      <div class="input-row">
+        <input type="number" id="p3_my_row" placeholder="例：30" min="1">
+        <span class="unit">段 / 10cm</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="section-label">パターンの目数・段数</div>
+
+    <div class="form-group">
+      <label>目数</label>
+      <div class="input-row">
+        <input type="number" id="p3_pat_st_count" placeholder="例：100" min="1">
+        <span class="unit">目</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>段数</label>
+      <div class="input-row">
+        <input type="number" id="p3_pat_row_count" placeholder="例：140" min="1">
+        <span class="unit">段</span>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calcGaugeConvert()">計算する</button>
+
+    <div class="result-box" id="p3_result">
+      <div class="result-label">自分のゲージでの目数・段数</div>
+      <div class="result-multi">
+        <div class="result-item">
+          <div class="label">目数</div>
+          <div class="value" id="p3_st">-</div>
+          <div class="sub">目</div>
+        </div>
+        <div class="result-item">
+          <div class="label">段数</div>
+          <div class="value" id="p3_row">-</div>
+          <div class="sub">段</div>
+        </div>
+      </div>
+      <div class="result-note">※小数点以下は四捨五入。模様編みがある場合はリピート数に合わせて調整してください。</div>
+    </div>
+  </div>
+
+  <!-- 使い方 -->
+  <div class="howto">
+    <h2>📖 使い方・ゲージについて</h2>
+    <p style="margin-bottom:8px;">ゲージとは、10cm × 10cm を編んだときの目数と段数のことです。</p>
+    <ul>
+      <li>使う毛糸・針・編む力によってゲージは変わります</li>
+      <li>作品を編む前に必ずゲージスウォッチを編んで確認しましょう</li>
+      <li>パターンのゲージと自分のゲージが違う場合は「ゲージ変換」タブで計算できます</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- よくある質問 -->
+<div style="max-width:640px; margin:0 auto; padding:0 16px; margin-bottom:16px;">
+  <div style="background:#f3effb; border:1px solid #c4aee0; border-radius:16px; padding:20px;">
+    <h2 style="font-size:1rem; color:#5e4580; margin-bottom:16px;">よくある質問</h2>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. ゲージ計算とは何ですか？</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. ゲージとは10cm×10cmを編んだときの目数と段数のことです。使う毛糸・針・編む力によって変わります。パターンのゲージと自分のゲージが違う場合、目数を換算しないとサイズが合わなくなります。</p>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. 作りたいサイズから目数を計算するには？</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. 「サイズ→目数」タブで計算できます。自分のゲージ（10cmの目数・段数）と作りたいサイズ（幅・高さ）を入力するだけで必要な目数・段数が自動で出ます。</p>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. パターンのゲージと自分のゲージが違う場合はどうする？</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. 「ゲージ変換」タブを使います。パターンのゲージ・自分のゲージ・パターンの目数を入力すると、自分のゲージで編む場合の目数・段数が計算できます。</p>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. 編んだ目数から出来上がりサイズを調べたい</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. 「目数→サイズ」タブで計算できます。自分のゲージと編んだ目数・段数を入力すると出来上がりサイズが自動で出ます。</p>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. ゲージスウォッチはなぜ必要？</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. 毛糸の種類・針のサイズ・個人の編み具合でゲージは変わります。作品を編む前に必ずゲージスウォッチ（試し編み）をして自分のゲージを確認してください。</p>
+    </div>
+
+    <div>
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. 棒針と かぎ針でゲージは変わる？</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. 変わります。同じ毛糸でも棒針とかぎ針では目の大きさが異なります。このツールはどちらの編み物にも使えますが、必ず実際に使う針でゲージを測ってから計算してください。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 広告枠（下部） -->
+<div style="max-width:640px; margin:0 auto; padding:0 16px;">
+  <div class="ad-slot ad-slot-rectangle">
+    <!-- Google AdSense コードをここに挿入 -->
+    広告
+  </div>
+</div>
+
+<footer>
+  <p>手芸計算ツール | 編み物ゲージ計算</p>
+  <p style="margin-top:4px;">© 2026 手芸計算ツール | <a href="privacy.html" style="color:#ccc;">プライバシーポリシー</a></p>
+</footer>
+
+<script>
+  function switchTab(index) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      t.classList.toggle('active', i === index);
+    });
+    document.querySelectorAll('.panel').forEach((p, i) => {
+      p.classList.toggle('active', i === index);
+    });
+  }
+
+  function round1(val) {
+    return Math.round(val * 10) / 10;
+  }
+
+  // パネル1：サイズ→目数
+  function calcSizeToStitch() {
+    const gSt  = parseFloat(document.getElementById('p1_gauge_st').value);
+    const gRow = parseFloat(document.getElementById('p1_gauge_row').value);
+    const w    = parseFloat(document.getElementById('p1_width').value);
+    const h    = parseFloat(document.getElementById('p1_height').value);
+
+    if (!gSt || !w) { alert('ゲージの目数と幅を入力してください'); return; }
+
+    const st  = Math.round(w * gSt / 10);
+    const row = (gRow && h) ? Math.round(h * gRow / 10) : '-';
+
+    document.getElementById('p1_st').textContent  = st;
+    document.getElementById('p1_row').textContent = row;
+    document.getElementById('p1_result').classList.add('show');
+  }
+
+  // パネル2：目数→サイズ
+  function calcStitchToSize() {
+    const gSt  = parseFloat(document.getElementById('p2_gauge_st').value);
+    const gRow = parseFloat(document.getElementById('p2_gauge_row').value);
+    const st   = parseFloat(document.getElementById('p2_st').value);
+    const row  = parseFloat(document.getElementById('p2_row').value);
+
+    if (!gSt || !st) { alert('ゲージの目数と目数を入力してください'); return; }
+
+    const width  = round1(st * 10 / gSt);
+    const height = (gRow && row) ? round1(row * 10 / gRow) : '-';
+
+    document.getElementById('p2_width').textContent  = width;
+    document.getElementById('p2_height').textContent = height;
+    document.getElementById('p2_result').classList.add('show');
+  }
+
+  // パネル3：ゲージ変換
+  function calcGaugeConvert() {
+    const patSt  = parseFloat(document.getElementById('p3_pat_st').value);
+    const patRow = parseFloat(document.getElementById('p3_pat_row').value);
+    const mySt   = parseFloat(document.getElementById('p3_my_st').value);
+    const myRow  = parseFloat(document.getElementById('p3_my_row').value);
+    const patStCount  = parseFloat(document.getElementById('p3_pat_st_count').value);
+    const patRowCount = parseFloat(document.getElementById('p3_pat_row_count').value);
+
+    if (!patSt || !mySt || !patStCount) {
+      alert('パターンのゲージ・自分のゲージ・パターンの目数を入力してください');
+      return;
+    }
+
+    const newSt  = Math.round(patStCount * mySt / patSt);
+    const newRow = (patRow && myRow && patRowCount)
+      ? Math.round(patRowCount * myRow / patRow)
+      : '-';
+
+    document.getElementById('p3_st').textContent  = newSt;
+    document.getElementById('p3_row').textContent = newRow;
+    document.getElementById('p3_result').classList.add('show');
+  }
+</script>
+
+</body>
+</html>
