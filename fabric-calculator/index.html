@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6029281458066273"
+     crossorigin="anonymous"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T4DZVK212J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-T4DZVK212J');
+</script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="AePOnuSo4vvO81fknjDi69dxaGotLgwNUbQGqx0IymU" />
+  <title>生地の使用量・価格計算ツール｜端切れ・余り布の価格も自動計算</title>
+  <meta name="description" content="購入した生地の幅・長さ・価格から、実際に使った部分の価格や残った端切れの価値を自動計算。ハンドメイド・洋裁・パッチワークに便利な無料ツールです。">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      background: #faf9f7;
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #7b5ea7;
+      color: white;
+      padding: 16px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    header p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    /* 広告枠 */
+    .ad-slot {
+      background: #f0ede8;
+      border: 1px dashed #ccc;
+      text-align: center;
+      padding: 12px;
+      margin: 12px 16px;
+      color: #999;
+      font-size: 0.8rem;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ad-slot-rectangle {
+      min-height: 250px;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 16px 32px;
+    }
+
+    /* タブ */
+    .tabs {
+      display: flex;
+      margin: 16px 0 0;
+      border-bottom: 2px solid #7b5ea7;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px 4px;
+      text-align: center;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-bottom: none;
+      color: #666;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: #7b5ea7;
+      color: white;
+      font-weight: bold;
+      border-color: #7b5ea7;
+    }
+
+    /* 計算パネル */
+    .panel {
+      display: none;
+      background: white;
+      border: 1px solid #ddd;
+      border-top: none;
+      padding: 20px 16px;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #7b5ea7;
+      margin-bottom: 4px;
+    }
+
+    .panel-desc {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #555;
+    }
+
+    .label-note {
+      font-weight: normal;
+      color: #999;
+      font-size: 0.78rem;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      background: #fafafa;
+      -webkit-appearance: none;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #7b5ea7;
+      background: #fff;
+    }
+
+    .unit {
+      white-space: nowrap;
+      color: #666;
+      font-size: 0.9rem;
+      min-width: 40px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 16px 0;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #7b5ea7;
+      margin-bottom: 12px;
+      padding-left: 8px;
+      border-left: 3px solid #7b5ea7;
+    }
+
+    .calc-btn {
+      width: 100%;
+      padding: 14px;
+      background: #7b5ea7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .calc-btn:active {
+      background: #5e4580;
+    }
+
+    .result-box {
+      display: none;
+      background: #f3effb;
+      border: 2px solid #7b5ea7;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .result-box.show {
+      display: block;
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      color: #7b5ea7;
+      margin-bottom: 8px;
+    }
+
+    .result-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #5e4580;
+    }
+
+    .result-unit {
+      font-size: 1rem;
+      color: #7b5ea7;
+      margin-left: 4px;
+    }
+
+    .result-note {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 8px;
+    }
+
+    .result-multi {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .result-item {
+      text-align: center;
+      padding: 12px 16px;
+      background: white;
+      border-radius: 6px;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .result-item .label {
+      font-size: 0.78rem;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .result-item .value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #5e4580;
+    }
+
+    .result-item .sub {
+      font-size: 0.78rem;
+      color: #7b5ea7;
+    }
+
+    /* 使い方 */
+    .howto {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .howto h2 {
+      font-size: 0.95rem;
+      color: #7b5ea7;
+      margin-bottom: 12px;
+    }
+
+    .howto p, .howto li {
+      font-size: 0.82rem;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .howto ul {
+      padding-left: 1.2em;
+    }
+
+    /* 関連ツール */
+    .related {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .related a {
+      display: inline-block;
+      margin-top: 8px;
+      color: #7b5ea7;
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    footer {
+      background: #555;
+      color: #ccc;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.78rem;
+      margin-top: 32px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🧵 生地の使用量・価格計算ツール</h1>
+  <p>使った分の価格・残った端切れの価値をかんたん計算</p>
+</header>
+
+<!-- 広告枠（上部） -->
+<div style="max-width:640px; margin:0 auto;">
+  <div class="ad-slot">
+    <!-- Google AdSense コードをここに挿入 -->
+    広告
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- タブ -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(0)">使用分の価格</div>
+    <div class="tab" onclick="switchTab(1)">残りの価値</div>
+  </div>
+
+  <!-- パネル1：使用分の価格計算 -->
+  <div class="panel active" id="panel0">
+    <div class="panel-title">使用した生地分の価格を計算</div>
+    <div class="panel-desc">購入した生地の情報と、実際に使うサイズを入力すると、使った分の価格がわかります</div>
+
+    <div class="section-label">購入した生地</div>
+
+    <div class="form-group">
+      <label>幅</label>
+      <div class="input-row">
+        <input type="number" id="p1_buy_w" placeholder="例：110" min="0.1" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>長さ</label>
+      <div class="input-row">
+        <input type="number" id="p1_buy_l" placeholder="例：50" min="0.1" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>購入価格</label>
+      <div class="input-row">
+        <input type="number" id="p1_buy_price" placeholder="例：680" min="0" step="1">
+        <span class="unit">円</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="section-label">使用する部分のサイズ</div>
+
+    <div class="form-group">
+      <label>縦</label>
+      <div class="input-row">
+        <input type="number" id="p1_use_h" placeholder="例：30" min="0.1" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>横</label>
+      <div class="input-row">
+        <input type="number" id="p1_use_w" placeholder="例：25" min="0.1" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>個数 <span class="label-note">（同じサイズを何枚作るか）</span></label>
+      <div class="input-row">
+        <input type="number" id="p1_count" placeholder="例：1" min="1" step="1" value="1">
+        <span class="unit">枚</span>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calcUsedPrice()">計算する</button>
+
+    <div class="result-box" id="p1_result">
+      <div class="result-label">使用した生地分の価格</div>
+      <div>
+        <span class="result-value" id="p1_price">-</span><span class="result-unit">円</span>
+      </div>
+      <div class="result-multi">
+        <div class="result-item">
+          <div class="label">生地の単価</div>
+          <div class="value" id="p1_unit">-</div>
+          <div class="sub">円 / 10cm四方</div>
+        </div>
+        <div class="result-item">
+          <div class="label">使用した面積</div>
+          <div class="value" id="p1_area">-</div>
+          <div class="sub">cm²</div>
+        </div>
+      </div>
+      <div class="result-note">※裁断ロスや縫い代は含まれていません。目安としてご利用ください。</div>
+    </div>
+  </div>
+
+  <!-- パネル2：残りの生地の価値 -->
+  <div class="panel" id="panel1">
+    <div class="panel-title">残った生地（端切れ）の価値を計算</div>
+    <div class="panel-desc">購入した生地から、これまでに使った分を差し引いて、残りの生地の価値と面積を計算します</div>
+
+    <div class="section-label">購入した生地</div>
+
+    <div class="form-group">
+      <label>幅</label>
+      <div class="input-row">
+        <input type="number" id="p2_buy_w" placeholder="例：110" min="0.1" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>長さ</label>
+      <div class="input-row">
+        <input type="number" id="p2_buy_l" placeholder="例：100" min="0.1" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>購入価格</label>
+      <div class="input-row">
+        <input type="number" id="p2_buy_price" placeholder="例：1200" min="0" step="1">
+        <span class="unit">円</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div class="section-label">これまでに使った部分（合計）</div>
+
+    <div class="form-group">
+      <label>縦</label>
+      <div class="input-row">
+        <input type="number" id="p2_used_h" placeholder="例：30" min="0" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>横</label>
+      <div class="input-row">
+        <input type="number" id="p2_used_w" placeholder="例：25" min="0" step="0.1">
+        <span class="unit">cm</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>個数 <span class="label-note">（このサイズを何枚使ったか）</span></label>
+      <div class="input-row">
+        <input type="number" id="p2_used_count" placeholder="例：1" min="1" step="1" value="1">
+        <span class="unit">枚</span>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calcRemaining()">計算する</button>
+
+    <div class="result-box" id="p2_result">
+      <div class="result-label">残りの生地の価値</div>
+      <div>
+        <span class="result-value" id="p2_value">-</span><span class="result-unit">円</span>
+      </div>
+      <div class="result-multi">
+        <div class="result-item">
+          <div class="label">残りの面積</div>
+          <div class="value" id="p2_area">-</div>
+          <div class="sub">cm²</div>
+        </div>
+        <div class="result-item">
+          <div class="label">同じ幅なら約</div>
+          <div class="value" id="p2_length">-</div>
+          <div class="sub">cmぶん</div>
+        </div>
+      </div>
+      <div class="result-note">※実際にカットできる形状・大きさによって使える範囲は変わります。</div>
+    </div>
+  </div>
+
+  <!-- 使い方 -->
+  <div class="howto">
+    <h2>📖 使い方</h2>
+    <p style="margin-bottom:8px;">生地は「幅 × 長さ」の面積に対して価格がついています。この単価をもとに、実際に使った部分の価格や、残った端切れの価値を計算します。</p>
+    <ul>
+      <li>生地店では幅(cm) × 必要な長さ(cm)で購入することが多いです（例：110cm幅を50cm分購入）</li>
+      <li>メートル単位で購入した場合は、cmに換算して入力してください（1m＝100cm）</li>
+      <li>「使用分の価格」タブで、作品に使った部分のコストを把握できます</li>
+      <li>「残りの価値」タブで、端切れ・余り布の価値を把握できます</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- よくある質問 -->
+<div style="max-width:640px; margin:0 auto; padding:0 16px; margin-bottom:16px;">
+  <div style="background:#f3effb; border:1px solid #c4aee0; border-radius:16px; padding:20px;">
+    <h2 style="font-size:1rem; color:#5e4580; margin-bottom:16px;">よくある質問</h2>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. 生地の使用分の価格はどうやって計算しますか？</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. 購入価格を「購入した生地の面積（幅×長さ）」で割って1cm²あたりの単価を求め、それに実際に使った部分の面積（縦×横×枚数）を掛けて計算します。「使用分の価格」タブに購入時の情報と使用サイズを入力するだけで自動計算できます。</p>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. 端切れ・余り布の価値も計算できますか？</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. 「残りの価値」タブで計算できます。購入した生地全体の価値から、これまでに使った分の価値を差し引いて、残りの面積と価値を表示します。</p>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. メートル単位で購入した生地はどう入力すればいいですか？</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. 1m＝100cmとしてcmに換算してから入力してください。例えば1.5m購入した場合は「150」と入力します。</p>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. 縫い代やロス分は考慮されますか？</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. このツールは面積比による単純な按分計算のため、縫い代や裁断ロスは含まれていません。実際の必要量にはロス分を上乗せして見積もることをおすすめします。</p>
+    </div>
+
+    <div>
+      <p style="font-weight:bold; color:#7b5ea7; font-size:0.9rem; margin-bottom:6px;">Q. 同じサイズのパーツを複数枚作る場合はどうすればいいですか？</p>
+      <p style="font-size:0.82rem; color:#555; line-height:1.7;">A. 「個数」欄に作る枚数を入力してください。1枚分のサイズ×枚数分の合計価格・面積で計算されます。</p>
+    </div>
+  </div>
+</div>
+
+<!-- Amazonおすすめ商品 -->
+<div style="max-width:640px; margin:0 auto; padding:0 16px;">
+  <div style="background:#faf7fd; border:1px solid #d4bfee; border-radius:8px; padding:20px; margin-bottom:16px;">
+    <h2 style="font-size:1rem; color:#7b5ea7; margin-bottom:4px;">🛒 裁縫・ハンドメイドのおすすめ道具</h2>
+    <p style="font-size:0.72rem; color:#999; margin-bottom:14px;">※ Amazonアソシエイトリンクを含みます</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <a href="https://www.amazon.co.jp/s?k=裁ちばさみ&tag=tomo31040b-22" target="_blank" rel="nofollow noopener" style="display:flex; align-items:center; gap:12px; background:white; border:1px solid #e8dff5; border-radius:8px; padding:12px; text-decoration:none; color:#333;">
+        <div style="font-size:1.6rem; flex-shrink:0;">✂️</div>
+        <div style="flex:1;">
+          <div style="font-size:0.85rem; font-weight:bold; line-height:1.4;">裁ちばさみ</div>
+          <span style="font-size:0.7rem; color:#e07820; background:#fff3e0; border-radius:4px; padding:2px 6px; display:inline-block; margin-top:4px;">Amazon</span>
+        </div>
+        <div style="color:#ccc;">›</div>
+      </a>
+      <a href="https://www.amazon.co.jp/s?k=ロータリーカッター+裁縫&tag=tomo31040b-22" target="_blank" rel="nofollow noopener" style="display:flex; align-items:center; gap:12px; background:white; border:1px solid #e8dff5; border-radius:8px; padding:12px; text-decoration:none; color:#333;">
+        <div style="font-size:1.6rem; flex-shrink:0;">🌀</div>
+        <div style="flex:1;">
+          <div style="font-size:0.85rem; font-weight:bold; line-height:1.4;">ロータリーカッター＆カッティングマット</div>
+          <span style="font-size:0.7rem; color:#e07820; background:#fff3e0; border-radius:4px; padding:2px 6px; display:inline-block; margin-top:4px;">Amazon</span>
+        </div>
+        <div style="color:#ccc;">›</div>
+      </a>
+      <a href="https://www.amazon.co.jp/s?k=方眼定規+裁縫&tag=tomo31040b-22" target="_blank" rel="nofollow noopener" style="display:flex; align-items:center; gap:12px; background:white; border:1px solid #e8dff5; border-radius:8px; padding:12px; text-decoration:none; color:#333;">
+        <div style="font-size:1.6rem; flex-shrink:0;">📐</div>
+        <div style="flex:1;">
+          <div style="font-size:0.85rem; font-weight:bold; line-height:1.4;">方眼定規（裁縫用）</div>
+          <span style="font-size:0.7rem; color:#e07820; background:#fff3e0; border-radius:4px; padding:2px 6px; display:inline-block; margin-top:4px;">Amazon</span>
+        </div>
+        <div style="color:#ccc;">›</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 関連ツール -->
+<div style="max-width:640px; margin:0 auto; padding:0 16px;">
+  <div class="related">
+    <p style="font-size:0.85rem; color:#555;">編み物もされる方はこちらもどうぞ</p>
+    <a href="../">🧶 編み物ゲージ計算ツール</a>
+  </div>
+</div>
+
+<!-- 広告枠（下部） -->
+<div style="max-width:640px; margin:0 auto; padding:0 16px;">
+  <div class="ad-slot ad-slot-rectangle">
+    <!-- Google AdSense コードをここに挿入 -->
+    広告
+  </div>
+</div>
+
+<footer>
+  <p>手芸計算ツール | 生地の価格計算</p>
+  <p style="margin-top:4px;">© 2026 手芸計算ツール | <a href="privacy.html" style="color:#ccc;">プライバシーポリシー</a></p>
+</footer>
+
+<script>
+  function switchTab(index) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      t.classList.toggle('active', i === index);
+    });
+    document.querySelectorAll('.panel').forEach((p, i) => {
+      p.classList.toggle('active', i === index);
+    });
+  }
+
+  // パネル1：使用分の価格計算
+  function calcUsedPrice() {
+    const buyW = parseFloat(document.getElementById('p1_buy_w').value);
+    const buyL = parseFloat(document.getElementById('p1_buy_l').value);
+    const buyPrice = parseFloat(document.getElementById('p1_buy_price').value);
+    const useH = parseFloat(document.getElementById('p1_use_h').value);
+    const useW = parseFloat(document.getElementById('p1_use_w').value);
+    const count = parseFloat(document.getElementById('p1_count').value) || 1;
+
+    if (!buyW || !buyL || !buyPrice || !useH || !useW) {
+      alert('購入した生地の情報と、使用するサイズをすべて入力してください');
+      return;
+    }
+
+    const unitPricePerCm2 = buyPrice / (buyW * buyL);
+    const usedArea = useH * useW * count;
+    const usedPrice = Math.round(unitPricePerCm2 * usedArea);
+    const unitPer10cm2 = Math.round(unitPricePerCm2 * 100 * 10) / 10;
+
+    document.getElementById('p1_price').textContent = usedPrice.toLocaleString();
+    document.getElementById('p1_unit').textContent = unitPer10cm2;
+    document.getElementById('p1_area').textContent = usedArea.toLocaleString();
+    document.getElementById('p1_result').classList.add('show');
+  }
+
+  // パネル2：残りの生地の価値
+  function calcRemaining() {
+    const buyW = parseFloat(document.getElementById('p2_buy_w').value);
+    const buyL = parseFloat(document.getElementById('p2_buy_l').value);
+    const buyPrice = parseFloat(document.getElementById('p2_buy_price').value);
+    const usedH = parseFloat(document.getElementById('p2_used_h').value) || 0;
+    const usedW = parseFloat(document.getElementById('p2_used_w').value) || 0;
+    const count = parseFloat(document.getElementById('p2_used_count').value) || 1;
+
+    if (!buyW || !buyL || !buyPrice) {
+      alert('購入した生地の情報を入力してください');
+      return;
+    }
+
+    const totalArea = buyW * buyL;
+    const unitPricePerCm2 = buyPrice / totalArea;
+    const usedArea = usedH * usedW * count;
+    const remainingArea = Math.max(totalArea - usedArea, 0);
+    const remainingValue = Math.round(unitPricePerCm2 * remainingArea);
+    const remainingLength = Math.round((remainingArea / buyW) * 10) / 10;
+
+    document.getElementById('p2_value').textContent = remainingValue.toLocaleString();
+    document.getElementById('p2_area').textContent = remainingArea.toLocaleString();
+    document.getElementById('p2_length').textContent = remainingLength.toLocaleString();
+    document.getElementById('p2_result').classList.add('show');
+  }
+</script>
+
+</body>
+</html>
